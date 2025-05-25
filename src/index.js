@@ -8,7 +8,10 @@ const authRoutes = require('./routes/auth');
 const tipRoutes = require('./routes/tips');
 const mealRoutes = require('./routes/meals');
 const userRoutes = require('./routes/user');
-const fetch = require('node-fetch');
+let fetch;
+(async () => {
+  fetch = (await import('node-fetch')).default;
+})();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
