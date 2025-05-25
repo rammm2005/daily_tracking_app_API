@@ -24,6 +24,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/tips', tipRoutes);
 app.use('/api/meals', mealRoutes);
 app.use('/api/users', userRoutes);
+app.get('/hello', (req, res) => {
+  res.json({ message: 'Hello, Mat Datang di API TRACKING APP DAILY.....' });
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
