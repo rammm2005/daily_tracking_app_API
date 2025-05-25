@@ -45,7 +45,7 @@ app.get('/', async (req, res) => {
     const data = await response.json();
     console.log(data)
 
-    if (data.status === 'success') {
+    if (data.status) {
       await Location.create({
         ip,
         country: data.country,
