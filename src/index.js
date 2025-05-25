@@ -8,6 +8,7 @@ const authRoutes = require('./routes/auth');
 const tipRoutes = require('./routes/tips');
 const mealRoutes = require('./routes/meals');
 const userRoutes = require('./routes/user');
+const fetch = require('node-fetch');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -27,18 +28,49 @@ app.use('/api/users', userRoutes);
 app.get('/hello', (req, res) => {
   res.json({ message: 'Hello, Mat Datang di API TRACKING APP DAILY.....' });
 });
-app.get('/', (req, res) => {
+
+app.get('/', async (req, res) => {
   const ip =
     req.headers['x-forwarded-for']?.split(',').shift() ||
     req.socket?.remoteAddress ||
     req.connection?.remoteAddress ||
-    'IP tidak diketahui';
+    '';
 
-  res.json({
-    message: 'Selamat datang di Tracker App Daily — solusi pintar untuk melacak aktivitas harianmu dengan mudah dan efektif!',
-    yourIp: ip
-  });
+  try {
+    const response = await fetch(`http://ip-api.com/json/${ip}`);
+    const data = await response.json();
+
+    if (data.status === 'success') {
+      res.json({
+        message: 'Selamat datang di Tracker App Daily — solusi pintar untuk melacak aktivitas harianmu!',
+        yourIp: ip,
+        location: {
+          country: data.country,
+          region: data.regionName,
+          city: data.city,
+          zip: data.zip,
+          lat: data.lat,
+          lon: data.lon,
+          isp: data.isp,
+        }
+      });
+    } else {
+      res.json({
+        message: 'Selamat datang di Tracker App Daily — solusi pintar untuk melacak aktivitas harianmu!',
+        yourIp: ip,
+        location: 'Tidak dapat mendeteksi lokasi'
+      });
+    }
+  } catch (error) {
+    console.error('Error fetching location:', error);
+    res.json({
+      message: 'Selamat datang di Tracker App Daily — solusi pintar untuk melacak aktivitas harianmu!',
+      yourIp: ip,
+      location: 'Terjadi kesalahan saat mengambil lokasi'
+    });
+  }
 });
+
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
