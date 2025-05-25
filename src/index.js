@@ -8,6 +8,7 @@ const authRoutes = require('./routes/auth');
 const tipRoutes = require('./routes/tips');
 const mealRoutes = require('./routes/meals');
 const userRoutes = require('./routes/user');
+const Location = require('./model/location');
 let fetch;
 (async () => {
   fetch = (await import('node-fetch')).default;
@@ -44,6 +45,17 @@ app.get('/', async (req, res) => {
     const data = await response.json();
 
     if (data.status === 'success') {
+      await Location.create({
+        ip,
+        country: data.country,
+        region: data.regionName,
+        city: data.city,
+        zip: data.zip,
+        lat: data.lat,
+        lon: data.lon,
+        isp: data.isp,
+      });
+
       res.json({
         message: 'Selamat datang di Tracker App Daily — solusi pintar untuk melacak aktivitas harianmu!',
         yourIp: ip,
@@ -73,6 +85,7 @@ app.get('/', async (req, res) => {
     });
   }
 });
+
 
 
 app.listen(PORT, () => {
