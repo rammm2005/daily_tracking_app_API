@@ -4,7 +4,7 @@ const User = require('../model/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const sendOTP = require('../utils/send-otp'); 
+const sendOTP = require('../utils/send-otp');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -32,7 +32,7 @@ router.post('/register', async (req, res) => {
       goal,
       role: role || 'user',
       otpCode: otp,
-      otpExpires: new Date(Date.now() + 10 * 60 * 1000) 
+      otpExpires: new Date(Date.now() + 10 * 60 * 1000)
     });
 
     await user.save();
@@ -68,7 +68,11 @@ router.post('/verify-otp', async (req, res) => {
   user.otpAttempts = 0;
   await user.save();
 
-  res.json({ success: true, message: 'OTP berhasil diverifikasi. Silakan login.' });
+  res.json({
+    success: true,
+    message: 'OTP berhasil diverifikasi. Silakan login.',
+    role: user.role,
+  });
 });
 
 router.post('/resend-otp', async (req, res) => {
