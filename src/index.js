@@ -27,6 +27,18 @@ app.use('/api/users', userRoutes);
 app.get('/hello', (req, res) => {
   res.json({ message: 'Hello, Mat Datang di API TRACKING APP DAILY.....' });
 });
+app.get('/', (req, res) => {
+  const ip =
+    req.headers['x-forwarded-for']?.split(',').shift() ||
+    req.socket?.remoteAddress ||
+    req.connection?.remoteAddress ||
+    'IP tidak diketahui';
+
+  res.json({
+    message: 'Selamat datang di Tracker App Daily — solusi pintar untuk melacak aktivitas harianmu dengan mudah dan efektif!',
+    yourIp: ip
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
