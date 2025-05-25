@@ -34,18 +34,18 @@ app.get('/hello', (req, res) => {
 });
 
 app.get('/', async (req, res) => {
-  const ip =
-    req.headers['x-forwarded-for']?.split(',').shift() ||
+  const ip = req.headers['x-forwarded-for']?.split(',').shift() ||
     req.socket?.remoteAddress ||
     req.connection?.remoteAddress ||
-    '';
+    'IP tidak diketahui';
+  '';
 
   try {
     const response = await fetch(`http://ip-api.com/json/${ip}`);
     const data = await response.json();
     console.log(data)
 
-    if (data.status) {
+    if (data.status === 'success') {
       await Location.create({
         ip,
         country: data.country,
