@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Upload Tip Test</title>
+</head>
+
+<body>
+    <h2>Upload Tip</h2>
+    <form action="http://localhost:8000/api/tips" method="POST" enctype="multipart/form-data">
+        <label>Title:</label><br />
+        <input type="text" name="title" /><br />
+
+        <label>Content:</label><br />
+        <textarea name="content"></textarea><br />
+
+        <label>Description Short:</label><br />
+        <input type="text" name="description_short" /><br />
+
+        <label>Type:</label><br />
+        <input type="text" name="type" /><br />
+
+        <label>User ID:</label><br />
+        <input type="text" name="userId" value="12345" /><br />
+
+        <label>Images:</label><br />
+        <input type="file" name="images" multiple /><br /><br />
+
+        <button type="submit">Upload</button>
+    </form>
+</body>
+
+</html>

@@ -33,59 +33,59 @@ app.get('/hello', (req, res) => {
   res.json({ message: 'Hello, Mat Datang di API TRACKING APP DAILY.....' });
 });
 
-app.get('/', async (req, res) => {
-  const ip = req.headers['x-forwarded-for']?.split(',').shift() ||
-    req.socket?.remoteAddress ||
-    req.connection?.remoteAddress ||
-    'IP tidak diketahui';
-  '';
+// app.get('/', async (req, res) => {
+//   const ip = req.headers['x-forwarded-for']?.split(',').shift() ||
+//     req.socket?.remoteAddress ||
+//     req.connection?.remoteAddress ||
+//     'IP tidak diketahui';
+//   '';
 
-  try {
-    const response = await fetch(`http://ip-api.com/json/${ip}`);
-    const data = await response.json();
-    console.log(data)
+//   try {
+//     const response = await fetch(`http://ip-api.com/json/${ip}`);
+//     const data = await response.json();
+//     console.log(data)
 
-    if (data.status) {
-      await Location.create({
-        ip,
-        country: data.country,
-        region: data.regionName,
-        city: data.city,
-        zip: data.zip,
-        lat: data.lat,
-        lon: data.lon,
-        isp: data.isp,
-      });
+//     if (data.status) {
+//       await Location.create({
+//         ip,
+//         country: data.country,
+//         region: data.regionName,
+//         city: data.city,
+//         zip: data.zip,
+//         lat: data.lat,
+//         lon: data.lon,
+//         isp: data.isp,
+//       });
 
-      res.json({
-        message: 'Selamat datang di Tracker App Daily — solusi pintar untuk melacak aktivitas harianmu!',
-        yourIp: ip,
-        location: {
-          country: data.country,
-          region: data.regionName,
-          city: data.city,
-          zip: data.zip,
-          lat: data.lat,
-          lon: data.lon,
-          isp: data.isp,
-        }
-      });
-    } else {
-      res.json({
-        message: 'Selamat datang di Tracker App Daily — solusi pintar untuk melacak aktivitas harianmu!',
-        yourIp: ip,
-        location: 'Tidak dapat mendeteksi lokasi'
-      });
-    }
-  } catch (error) {
-    console.error('Error fetching location:', error);
-    res.json({
-      message: 'Selamat datang di Tracker App Daily — solusi pintar untuk melacak aktivitas harianmu!',
-      yourIp: ip,
-      location: 'Terjadi kesalahan saat mengambil lokasi'
-    });
-  }
-});
+//       res.json({
+//         message: 'Selamat datang di Tracker App Daily — solusi pintar untuk melacak aktivitas harianmu!',
+//         yourIp: ip,
+//         location: {
+//           country: data.country,
+//           region: data.regionName,
+//           city: data.city,
+//           zip: data.zip,
+//           lat: data.lat,
+//           lon: data.lon,
+//           isp: data.isp,
+//         }
+//       });
+//     } else {
+//       res.json({
+//         message: 'Selamat datang di Tracker App Daily — solusi pintar untuk melacak aktivitas harianmu!',
+//         yourIp: ip,
+//         location: 'Tidak dapat mendeteksi lokasi'
+//       });
+//     }
+//   } catch (error) {
+//     console.error('Error fetching location:', error);
+//     res.json({
+//       message: 'Selamat datang di Tracker App Daily — solusi pintar untuk melacak aktivitas harianmu!',
+//       yourIp: ip,
+//       location: 'Terjadi kesalahan saat mengambil lokasi'
+//     });
+//   }
+// });
 
 
 
