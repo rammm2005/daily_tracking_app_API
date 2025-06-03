@@ -17,10 +17,24 @@ router.get('/:userId', async (req, res) => {
     }
 });
 
+router.get('/detail/:id', async (req, res) => {
+    try {
+        const tip = await Tip.findById(req.params.id);
+        if (!tip) {
+            return res.status(404).json({ success: false, message: `Tip dengan id ${req.params.id} tidak ditemukan.` });
+        }
+        return res.status(200).json({ success: true, data: tip, message: `Success, Get Tip With Id : ${req.params.id}` });
+    } catch (err) {
+        console.error('GET /:id error:', err);
+        return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+
 router.get('/all/data', async (req, res) => {
     try {
         const tips = await Tip.find();
-        return res.status(200).json({ success: true, tips });
+        return res.status(200).json({ success: true, data: tips, message: 'Success Load All Data Tips' });
     } catch (err) {
         console.error('GET /all/data error:', err);
         return res.status(500).json({ success: false, message: err.message });
