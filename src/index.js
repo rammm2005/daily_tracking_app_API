@@ -8,12 +8,12 @@ const authRoutes = require('./routes/auth');
 const tipRoutes = require('./routes/tips');
 const mealRoutes = require('./routes/meals');
 const userRoutes = require('./routes/user');
-const Location = require('./model/location');
-let fetch;
-(async () => {
-  fetch = (await import('node-fetch')).default;
-})();
-const showRouteOverview = require('./routes/RouteOverview');
+// const Location = require('./model/location');
+const showRouteOverview = require('./routes/routeOverview');
+// let fetch;
+// (async () => {
+//   fetch = (await import('node-fetch')).default;
+// })();
 
 
 const app = express();
