@@ -13,6 +13,8 @@ let fetch;
 (async () => {
   fetch = (await import('node-fetch')).default;
 })();
+const showRouteOverview = require('./routes/RouteOverview');
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -32,6 +34,7 @@ app.use('/api/users', userRoutes);
 app.get('/hello', (req, res) => {
   res.json({ message: 'Hello, Mat Datang di API TRACKING APP DAILY.....' });
 });
+app.get('/', showRouteOverview);
 
 // app.get('/', async (req, res) => {
 //   const ip = req.headers['x-forwarded-for']?.split(',').shift() ||
