@@ -8,6 +8,7 @@ const authRoutes = require('./routes/auth');
 const tipRoutes = require('./routes/tips');
 const mealRoutes = require('./routes/meals');
 const userRoutes = require('./routes/user');
+const workoutRoutes = require('./routes/workout');
 // const Location = require('./model/location');
 const showRouteOverview = require('./routes/routeOverview');
 // let fetch;
@@ -31,6 +32,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/tips', tipRoutes);
 app.use('/api/meals', mealRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/workouts', workoutRoutes);
 app.get('/hello', (req, res) => {
   res.json({ message: 'Hello, Mat Datang di API TRACKING APP DAILY.....' });
 });
