@@ -9,6 +9,7 @@ const tipRoutes = require('./routes/tips');
 const mealRoutes = require('./routes/meals');
 const userRoutes = require('./routes/user');
 const workoutRoutes = require('./routes/workout');
+const reminderRoutes = require('./routes/reminder');
 // const Location = require('./model/location');
 const showRouteOverview = require('./routes/routeOverview');
 // let fetch;
@@ -18,11 +19,12 @@ const showRouteOverview = require('./routes/routeOverview');
 
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 100;
 const MONGO_URI = process.env.DB_URL;
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true })); 
 
 mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
@@ -33,6 +35,7 @@ app.use('/api/tips', tipRoutes);
 app.use('/api/meals', mealRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/workouts', workoutRoutes);
+app.use('/api/reminders', reminderRoutes);
 app.get('/hello', (req, res) => {
   res.json({ message: 'Hello, Mat Datang di API TRACKING APP DAILY.....' });
 });
