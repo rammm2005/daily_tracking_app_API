@@ -14,10 +14,9 @@ const DailyTrackerSchema = new mongoose.Schema({
     stepCount: { type: Number },
     stressLevel: { type: Number },
     notes: { type: String },
-    goalCheckins: {
-        type: Map,
-        of: Boolean
-    },
+    goalCheckins: [{
+        type: String,
+    }],
     updatedAt: { type: String }
 }, { timestamps: true });
 
