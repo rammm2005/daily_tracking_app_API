@@ -4,6 +4,9 @@ const axios = require('axios');
 const ChatSession = require('../model/ChatSession');
 const Message = require('../model/Message');
 const User = require('../model/User');
+const DailyTracking = require('../model/progress');
+const Schedule = require('../model/reminder');
+const Goal = require('../model/goal');
 
 const getSuggestions = () => [
     "Apa perkembangan goal-ku minggu ini?",
@@ -26,7 +29,12 @@ router.post('/chat', async (req, res) => {
 
         let session = await ChatSession.findOne({ userId }).populate('messages');
         if (!session) {
-            session = await ChatSession.create({ userId, messages: [] });
+            const title = message.length > 50 ? message.substring(0, 50) + '...' : message;
+            session = await ChatSession.create({
+                userId,
+                title,
+                messages: []
+            });
         }
 
         const userMsg = await Message.create({
@@ -44,9 +52,27 @@ router.post('/chat', async (req, res) => {
             content: m.content,
         }));
 
+        const [trackingData, scheduleData, goalsData] = await Promise.all([
+            DailyTracking.find({ userId }),
+            Schedule.find({ userId }),
+            Goal.find({ userId }),
+        ]);
+
+        const contextData = `
+Berikut data pengguna:
+- Goals:
+${goalsData.length > 0 ? goalsData.map(goal => `  • ${goal.title}: ${goal.description}`).join('\n') : '  • Tidak ada goal'}
+
+- Schedule:
+${scheduleData.length > 0 ? scheduleData.map(s => `  • ${s.title} pada ${new Date(s.date).toLocaleDateString('id-ID')}`).join('\n') : '  • Tidak ada jadwal'}
+
+- Daily Tracking:
+${trackingData.length > 0 ? trackingData.map(d => `  • ${new Date(d.date).toLocaleDateString('id-ID')}: workout=${d.workout}, mood=${d.mood}, tidur=${d.sleepHours} jam`).join('\n') : '  • Tidak ada data tracking'}
+`;
+
         chatHistory.unshift({
             role: "system",
-            content: "Kamu adalah asisten daily tracking pribadi yang membantu pengguna mencapai goal mereka dengan saran workout, jadwal, dan motivasi harian.",
+            content: `Kamu adalah asisten daily tracking pribadi yang membantu pengguna mencapai goal mereka dengan saran workout, jadwal, dan motivasi harian.\n\n${contextData}`
         });
 
         const response = await axios.post(
@@ -79,6 +105,23 @@ router.post('/chat', async (req, res) => {
     } catch (error) {
         console.error('Chatbot Error:', error?.response?.data || error.message);
         res.status(500).json({ error: 'Gagal memproses chat.' });
+    }
+});
+
+
+router.get('/chat/session/:sessionId/messages', async (req, res) => {
+    const { sessionId } = req.params;
+
+    try {
+        const session = await ChatSession.findById(sessionId).populate('messages');
+        if (!session) {
+            return res.status(404).json({ messages: [] });
+        }
+
+        res.json({ messages: session.messages });
+    } catch (error) {
+        console.error('Error fetching messages:', error.message);
+        res.status(500).json({ messages: [] });
     }
 });
 
