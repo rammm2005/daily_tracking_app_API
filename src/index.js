@@ -12,6 +12,7 @@ const workoutRoutes = require('./routes/workout');
 const reminderRoutes = require('./routes/reminder');
 const goalRoutes = require('./routes/goals');
 const trackerRoutes = require('./routes/progress');
+const chatbotRoutes = require('./routes/chatbot');
 // const Location = require('./model/location');
 const showRouteOverview = require('./routes/routeOverview');
 // let fetch;
@@ -40,6 +41,7 @@ app.use('/api/workouts', workoutRoutes);
 app.use('/api/reminders', reminderRoutes);
 app.use('/api/goals', goalRoutes);
 app.use('/api/tracker', trackerRoutes);
+app.use('/api/chatbot', chatbotRoutes);
 app.get('/hello', (req, res) => {
   res.json({ message: 'Hello, Mat Datang di API TRACKING APP DAILY.....' });
 });
