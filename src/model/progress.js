@@ -20,4 +20,4 @@ const DailyTrackerSchema = new mongoose.Schema({
     updatedAt: { type: String }
 }, { timestamps: true });
 
-module.exports = mongoose.model('c', DailyTrackerSchema);
+module.exports = mongoose.model('DailyTracker', DailyTrackerSchema);

@@ -10,4 +10,4 @@ const MealSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Meal', MealSchema);
+module.exports = mongoose.models.Meal || mongoose.model('Meal', MealSchema);
