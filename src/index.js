@@ -13,6 +13,8 @@ const reminderRoutes = require('./routes/reminder');
 const goalRoutes = require('./routes/goals');
 const trackerRoutes = require('./routes/progress');
 const chatbotRoutes = require('./routes/chatbot');
+const userFavorite = require('./routes/favorite');
+const { startReminderJob } = require('./jobs/scheduleEvent');
 // const Location = require('./model/location');
 const showRouteOverview = require('./routes/routeOverview');
 // let fetch;
@@ -42,11 +44,13 @@ app.use('/api/reminders', reminderRoutes);
 app.use('/api/goals', goalRoutes);
 app.use('/api/tracker', trackerRoutes);
 app.use('/api/chatbot', chatbotRoutes);
+app.use('/api/favorite', userFavorite);
 app.get('/hello', (req, res) => {
   res.json({ message: 'Hello, Mat Datang di API TRACKING APP DAILY.....' });
 });
 app.get('/', showRouteOverview);
 
+startReminderJob();
 // app.get('/', async (req, res) => {
 //   const ip = req.headers['x-forwarded-for']?.split(',').shift() ||
 //     req.socket?.remoteAddress ||

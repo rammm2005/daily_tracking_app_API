@@ -113,4 +113,50 @@ router.post('/login', async (req, res) => {
   }
 });
 
+
+router.post('/forgot-password', async (req, res) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user) return res.status(400).json({ success: false, message: 'Email tidak ditemukan' });
+
+  const otp = generateOTP();
+  user.otpCode = otp;
+  user.otpExpires = new Date(Date.now() + 10 * 60 * 1000);
+  user.otpAttempts = 0;
+  await user.save();
+
+  await sendOTP(email, otp);
+
+  res.json({ success: true, message: 'OTP untuk reset password telah dikirim ke email' });
+});
+
+
+router.post('/reset-password', async (req, res) => {
+  const { email, otp, newPassword } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user) return res.status(400).json({ success: false, message: 'Email tidak ditemukan' });
+
+  if (user.otpCode !== otp || user.otpExpires < Date.now()) {
+    user.otpAttempts += 1;
+    if (user.otpAttempts >= 3) {
+      user.isBlocked = true;
+    }
+    await user.save();
+    return res.status(400).json({ success: false, message: 'OTP salah atau kadaluarsa' });
+  }
+
+  const passwordHash = await bcrypt.hash(newPassword, 10);
+
+  user.passwordHash = passwordHash;
+  user.otpCode = null;
+  user.otpExpires = null;
+  user.otpAttempts = 0;
+  await user.save();
+
+  res.json({ success: true, message: 'Password berhasil direset. Silakan login dengan password baru.' });
+});
+
+
 module.exports = router;

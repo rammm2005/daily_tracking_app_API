@@ -37,6 +37,10 @@ const ReminderSchema = new mongoose.Schema({
         type: String,
         default: 'none',
     },
+    notified: {
+        type: Boolean,
+        default: false
+    }
 }, {
     timestamps: true
 });
