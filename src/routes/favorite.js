@@ -3,24 +3,46 @@ const router = express.Router();
 const Favorite = require('../model/favorite');
 
 const populateFavorite = async (favoriteId) => {
-    return await Favorite.findById(favoriteId)
+    const fav = await Favorite.findById(favoriteId)
         .populate('tips')
         .populate('workouts')
         .populate('meals');
+
+    if (fav) {
+        fav.tips = fav.tips || [];
+        fav.workouts = fav.workouts || [];
+        fav.meals = fav.meals || [];
+    }
+
+    return fav;
 };
 
 router.get('/user/:userId', async (req, res) => {
     try {
-        const favorites = await Favorite.findOne({ userId: req.params.userId })
+        let favorites = await Favorite.findOne({ userId: req.params.userId })
             .populate('tips')
             .populate('workouts')
             .populate('meals');
+
+        if (!favorites) {
+            favorites = {
+                userId: req.params.userId,
+                tips: [],
+                workouts: [],
+                meals: []
+            };
+        } else {
+            favorites.tips = favorites.tips || [];
+            favorites.workouts = favorites.workouts || [];
+            favorites.meals = favorites.meals || [];
+        }
 
         res.json({ success: true, data: [favorites] });
     } catch (err) {
         res.status(500).json({ success: false, message: err.message });
     }
 });
+
 
 router.post('/', async (req, res) => {
     try {
